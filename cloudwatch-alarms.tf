@@ -64,7 +64,7 @@ resource "aws_cloudwatch_metric_alarm" "low_disk" {
   metric_query {
     id = "e1"
     expression  = "m1/1000000000"
-    label       = "FreeStorageSpace"
+    label       = "FreeDiskSpace"
     return_data = "true"
   }
 
