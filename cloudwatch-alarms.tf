@@ -1,12 +1,13 @@
 resource "aws_cloudwatch_metric_alarm" "low_memory" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-memory"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "3"
+  evaluation_periods  = var.low_memory_alarm.evaluation_periods
   metric_name         = "FreeableMemory"
   namespace           = "AWS/RDS"
-  period              = "600"
+  period              = var.low_memory_alarm.period
   statistic           = "Maximum"
-  threshold           = "100"
+  threshold           = var.low_memory_alarm.threshold_in_gb
+  unit                = "Gigabytes"
   alarm_description   = "Database instance memory above threshold"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
@@ -19,12 +20,12 @@ resource "aws_cloudwatch_metric_alarm" "low_memory" {
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-high-cpu"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "3"
+  evaluation_periods  = var.cpu_usage_alarm.evaluation_periods
   metric_name         = "CPUUtilization"
   namespace           = "AWS/RDS"
-  period              = "600"
+  period              = var.cpu_usage_alarm.period
   statistic           = "Maximum"
-  threshold           = "80"
+  threshold           = var.cpu_usage_alarm.threshold_in_percentage
   alarm_description   = "Database instance CPU above threshold"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
@@ -37,13 +38,13 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
 resource "aws_cloudwatch_metric_alarm" "low_disk" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-disk"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "3"
+  evaluation_periods  = var.low_disk_alarm.evaluation_periods
   metric_name         = "FreeStorageSpace"
   namespace           = "AWS/RDS"
-  period              = "600"
+  period              = var.low_disk_alarm.period
   statistic           = "Maximum"
-  threshold           = "1000000000"
-  unit                = "Bytes"
+  threshold           = var.low_disk_alarm.threshold_in_gb
+  unit                = "Gigabytes"
   alarm_description   = "Database instance disk space is low"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
