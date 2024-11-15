@@ -2,18 +2,32 @@ resource "aws_cloudwatch_metric_alarm" "low_memory" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-memory"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.low_memory_alarm.evaluation_periods
-  metric_name         = "FreeableMemory"
-  namespace           = "AWS/RDS"
-  period              = var.low_memory_alarm.period
-  statistic           = "Maximum"
   threshold           = var.low_memory_alarm.threshold_in_gb
-  unit                = "Gigabytes"
+  treat_missing_data  = "missing"
   alarm_description   = "Database instance memory above threshold"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
 
-  dimensions = {
-    DBInstanceIdentifier = var.identifier
+  metric_query {
+    id = "e1"
+    expression  = "m1/1000000000"
+    label       = "MemoryInGB"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+    metric {
+      metric_name = "FreeableMemory"
+      namespace   = "AWS/RDS"
+      period      = var.low_memory_alarm.period
+      stat        = "Maximum"
+      unit        = "Bytes"
+
+      dimensions = {
+        DBInstanceIdentifier = var.identifier
+      }
+    }
   }
 }
 
@@ -26,6 +40,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   period              = var.cpu_usage_alarm.period
   statistic           = "Maximum"
   threshold           = var.cpu_usage_alarm.threshold_in_percentage
+  treat_missing_data  = "missing"
   alarm_description   = "Database instance CPU above threshold"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
@@ -39,18 +54,32 @@ resource "aws_cloudwatch_metric_alarm" "low_disk" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-disk"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.low_disk_alarm.evaluation_periods
-  metric_name         = "FreeStorageSpace"
-  namespace           = "AWS/RDS"
-  period              = var.low_disk_alarm.period
-  statistic           = "Maximum"
   threshold           = var.low_disk_alarm.threshold_in_gb
-  unit                = "Gigabytes"
+  treat_missing_data  = "missing"
   alarm_description   = "Database instance disk space is low"
   alarm_actions       = [var.alarm_sns_topics]
   ok_actions          = [var.alarm_sns_topics]
 
-  dimensions = {
-    DBInstanceIdentifier = var.identifier
+  metric_query {
+    id = "e1"
+    expression  = "m1/1000000000"
+    label       = "FreeStorageSpace"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+    metric {
+      metric_name = "FreeStorageSpace"
+      namespace   = "AWS/RDS"
+      period      = var.low_disk_alarm.period
+      stat        = "Maximum"
+      unit        = "Bytes"
+
+      dimensions = {
+        DBInstanceIdentifier = var.identifier
+      }
+    }
   }
 }
 
