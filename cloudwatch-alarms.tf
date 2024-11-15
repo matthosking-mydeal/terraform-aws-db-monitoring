@@ -2,6 +2,7 @@ resource "aws_cloudwatch_metric_alarm" "low_memory" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-memory"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.low_memory_alarm.evaluation_periods
+  datapoints_to_alarm = var.low_memory_alarm.data_points
   threshold           = var.low_memory_alarm.threshold_in_gb
   treat_missing_data  = "missing"
   alarm_description   = "Database instance memory above threshold"
@@ -22,7 +23,6 @@ resource "aws_cloudwatch_metric_alarm" "low_memory" {
       namespace   = "AWS/RDS"
       period      = var.low_memory_alarm.period
       stat        = "Maximum"
-      unit        = "Bytes"
 
       dimensions = {
         DBInstanceIdentifier = var.identifier
@@ -54,6 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "low_disk" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-disk"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.low_disk_alarm.evaluation_periods
+  datapoints_to_alarm = var.low_disk_alarm.data_points
   threshold           = var.low_disk_alarm.threshold_in_gb
   treat_missing_data  = "missing"
   alarm_description   = "Database instance disk space is low"
@@ -74,7 +75,6 @@ resource "aws_cloudwatch_metric_alarm" "low_disk" {
       namespace   = "AWS/RDS"
       period      = var.low_disk_alarm.period
       stat        = "Maximum"
-      unit        = "Bytes"
 
       dimensions = {
         DBInstanceIdentifier = var.identifier

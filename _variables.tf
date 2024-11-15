@@ -25,6 +25,7 @@ variable "event_categories" {
 variable "low_memory_alarm" {
   type = object({
     evaluation_periods           = optional(string, "1")
+    data_points                  = optional(string, "1")
     period                       = optional(string, "300")
     threshold_in_gb              = optional(string, "11")
   })
@@ -35,6 +36,7 @@ variable "low_memory_alarm" {
 variable "cpu_usage_alarm" {
   type = object({
     evaluation_periods           = optional(number, "1")
+    data_points                  = optional(string, "1")
     period                       = optional(number, "300")
     threshold_in_percentage      = optional(number, "70")
   })
@@ -45,6 +47,7 @@ variable "cpu_usage_alarm" {
 variable "low_disk_alarm" {
   type = object({
     evaluation_periods           = optional(number, "1")
+    data_points                  = optional(string, "1")
     period                       = optional(number, "300")
     threshold_in_gb              = optional(number, "500")
   })
