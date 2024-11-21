@@ -83,6 +83,27 @@ resource "aws_cloudwatch_metric_alarm" "low_disk" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "blocked_processes" {
+  count               = (var.resource_id != "") ? 1 : 0
+  alarm_name          = "${var.account_name}-db-${var.identifier}-blocked-processes"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = var.blocked_processes_alarm.evaluation_periods
+  datapoints_to_alarm = var.blocked_processes_alarm.data_points
+  threshold           = var.blocked_processes_alarm.threshold
+  treat_missing_data  = "missing"
+  alarm_description   = "Blocked processes above threshold"
+  alarm_actions       = [var.alarm_sns_topics]
+  ok_actions          = [var.alarm_sns_topics]
+
+  metric_query {
+    id = "e1"
+    expression  = "DB_PERF_INSIGHTS('RDS', '${var.resource_id}', 'db.General Statistics.Processes blocked.avg')"
+    label       = "db.General Statistics.Processes blocked"
+    period      = var.blocked_processes_alarm.period
+    return_data = "true"
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "low_cpu_credits" {
   count = substr(var.instance_class, 0, 4) == "db.t" ? 1 : 0
 

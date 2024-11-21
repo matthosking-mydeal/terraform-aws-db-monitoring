@@ -54,3 +54,20 @@ variable "low_disk_alarm" {
 
   default = {}
 }
+
+variable "resource_id" {
+  type        = string
+  default     = ""
+  description = "RDS database resource id"
+}
+
+variable "blocked_processes_alarm" {
+  type = object({
+    evaluation_periods           = optional(number, "1")
+    data_points                  = optional(string, "1")
+    period                       = optional(number, "300")
+    threshold                    = optional(number, "10")
+  })
+
+  default = {}
+}
