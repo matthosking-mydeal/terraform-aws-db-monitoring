@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "low_memory" {
   alarm_name          = "${var.account_name}-db-${var.identifier}-low-memory"
-  comparison_operator = "LessThanOrEqualToThreshold"
+  comparison_operator = "LessThanThreshold"
   evaluation_periods  = var.low_memory_alarm.evaluation_periods
   datapoints_to_alarm = var.low_memory_alarm.data_points
   threshold           = var.low_memory_alarm.threshold_in_gb
