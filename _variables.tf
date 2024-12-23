@@ -27,7 +27,7 @@ variable "low_memory_alarm" {
     evaluation_periods           = optional(string, "1")
     data_points                  = optional(string, "1")
     period                       = optional(string, "300")
-    threshold_in_gb              = optional(string, "11")
+    threshold_in_gb              = optional(string, "10.9")
   })
 
   default = {}

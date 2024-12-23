@@ -22,7 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "low_memory" {
       metric_name = "FreeableMemory"
       namespace   = "AWS/RDS"
       period      = var.low_memory_alarm.period
-      stat        = "Maximum"
+      stat        = "Minimum"
 
       dimensions = {
         DBInstanceIdentifier = var.identifier
